@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Cup - Match de Ventes</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        :root {
+            --bleu-infinity: #0082c3;
+            --rouge-infinity: #d32f2f;
+            --vert-terrain: #4caf50;
+        }
+
+        body {
+            margin: 0; background-color: #1a1a1a; font-family: 'Arial', sans-serif;
+            color: white; display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
+        }
+
+        #tv-screen {
+            width: 100vw; height: 56.25vw; max-height: 100vh; max-width: 177.78vh;
+            background: linear-gradient(to bottom, #004d73, #000);
+            position: relative; border: 10px solid #333;
+        }
+
+        header { text-align: center; padding: 15px; background: rgba(0,0,0,0.6); border-bottom: 2px solid var(--bleu-infinity); }
+        header h1 { margin: 0; font-size: 2.5vw; }
+
+        #stade {
+            position: absolute; top: 18%; left: 12%; width: 76%; height: 60%;
+            background: var(--vert-terrain); border: 4px solid white; display: flex;
+        }
+
+        .zone {
+            flex: 1; border-right: 2px solid rgba(255,255,255,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1vw; text-transform: uppercase; font-weight: bold; text-align: center;
+        }
+
+        .cote {
+            position: absolute; top: 18%; width: 10%; height: 60%;
+            display: flex; flex-wrap: wrap; justify-content: center; align-content: center; gap: 5px;
+        }
+        .cote-gauche { left: 1%; }
+        .cote-droite { right: 1%; }
+
+        .figurine-fixe { width: 30%; height: auto; filter: drop-shadow(2px 4px 6px black); }
+
+        #ballon {
+            position: absolute; width: 6vw; height: 6vw;
+            left: 50%; top: 50%; transform: translate(-50%, -50%);
+            transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+        }
+        #ballon img { width: 100%; height: auto; }
+
+        #footer-scores {
+            position: absolute; bottom: 0; width: 100%; height: 15%;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0,0,0,0.8);
+        }
+        .score-box { padding: 0 40px; font-size: 2.5vw; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div id="tv-screen">
+    <header>
+        <h1>INFINITY CUP - MULTIMÉDIA vs CONFORT</h1>
+        <p>VENDS UN SERVICE INFINITY, FAIS AVANCER LE BALLON !</p>
+    </header>
+
+    <div class="cote cote-gauche">
+        <img src="images/Anthony.png" class="figurine-fixe">
+        <img src="images/Bruno.png" class="figurine-fixe">
+        <img src="images/Lionel.png" class="figurine-fixe">
+        <img src="images/Mika.png" class="figurine-fixe">
+        <img src="images/Paolo.png" class="figurine-fixe">
+        <img src="images/Raph.png" class="figurine-fixe">
+    </div>
+
+    <div id="stade">
+        <div class="zone" style="background: rgba(0,130,195,0.2)">Défense<br>Multi</div>
+        <div class="zone">Milieu de terrain</div>
+        <div class="zone" style="background: rgba(211,47,47,0.2)">Attaque<br>Confort</div>
+        
+        <div id="ballon">
+            <img src="images/ballon.png" alt="⚽">
+        </div>
+    </div>
+
+    <div class="cote cote-droite">
+        <img src="images/Christine.png" class="figurine-fixe">
+        <img src="images/Elias.png" class="figurine-fixe">
+        <img src="images/Julien.png" class="figurine-fixe">
+        <img src="images/Zina.png" class="figurine-fixe">
+        <img src="images/Yassine.png" class="figurine-fixe">
+        <img src="images/Severine.png" class="figurine-fixe">
+    </div>
+
+    <div id="footer-scores">
+        <div class="score-box" style="color: var(--bleu-infinity)">MULTIMÉDIA</div>
+        <div id="tableau-score" style="font-size: 5vw;">0 - 0</div>
+        <div class="score-box" style="color: var(--rouge-infinity)">CONFORT</div>
+    </div>
+</div>
+
+<script>
+    // Config Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyCqgVEYrpem4KgV8OXqFN9ybMNPIz8gg9o",
+        authDomain: "challenge-infinity.firebaseapp.com",
+        databaseURL: "https://challenge-infinity-default-rtdb.firebaseio.com", // Vérifiez cette URL dans votre console Firebase !
+        projectId: "challenge-infinity",
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // ÉCOUTE DU MATCH
+    db.ref('match').on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            // Position du ballon (0 à 100%)
+            document.getElementById('ballon').style.left = data.position + "%";
+            // Mise à jour du score
+            document.getElementById('tableau-score').innerText = data.scoreMulti + " - " + data.scoreConfort;
+        }
+    });
+</script>
+</body>
+</html>
