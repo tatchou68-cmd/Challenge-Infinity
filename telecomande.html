@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Télécommande Infinity</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: white; text-align: center; padding: 20px; }
+        .group { border: 2px solid #444; padding: 15px; border-radius: 15px; margin-bottom: 20px; }
+        .multi { border-color: #0082c3; }
+        .confort { border-color: #d32f2f; }
+        button { 
+            width: 100%; padding: 15px; margin: 5px 0; font-size: 18px; font-weight: bold;
+            border: none; border-radius: 8px; cursor: pointer; color: white;
+        }
+        .btn-1 { background: #444; }
+        .btn-2 { background: #666; }
+        .btn-but { background: #2e7d32; font-size: 22px; }
+        .reset { background: #b71c1c; margin-top: 30px; width: 50%; }
+    </style>
+</head>
+<body>
+    <h2>🕹️ CONTRÔLE MATCH</h2>
+
+    <div class="group multi">
+        <h3>EQUIPE MULTIMÉDIA</h3>
+        <button class="btn-1" onclick="action('multi', 10)">+1 Touche (1U)</button>
+        <button class="btn-2" onclick="action('multi', 20)">+2 Touches (2U)</button>
+        <button class="btn-but" onclick="action('multi', 100)">⚽ BUT DIRECT !</button>
+    </div>
+
+    <div class="group confort">
+        <h3>EQUIPE CONFORT</h3>
+        <button class="btn-1" onclick="action('confort', -10)">+1 Touche (1U)</button>
+        <button class="btn-2" onclick="action('confort', -20)">+2 Touches (2U)</button>
+        <button class="btn-but" onclick="action('confort', -100)">⚽ BUT DIRECT !</button>
+    </div>
+
+    <button class="reset" onclick="reset()">Réinitialiser Match</button>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCqgVEYrpem4KgV8OXqFN9ybMNPIz8gg9o",
+            authDomain: "challenge-infinity.firebaseapp.com",
+            databaseURL: "https://challenge-infinity-default-rtdb.firebaseio.com",
+            projectId: "challenge-infinity",
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function action(equipe, valeur) {
+            const ref = db.ref('match');
+            ref.once('value').then(snap => {
+                let data = snap.val() || { position: 50, scoreMulti: 0, scoreConfort: 0 };
+                
+                if (Math.abs(valeur) === 100) { // Logique de BUT
+                    if (equipe === 'multi') data.scoreMulti++;
+                    else data.scoreConfort++;
+                    data.position = 50; // Retour au centre
+                } else {
+                    data.position += valeur;
+                }
+                
+                // Limites du terrain
+                if (data.position > 90) data.position = 90;
+                if (data.position < 10) data.position = 10;
+                
+                ref.set(data);
+            });
+        }
+
+        function reset() {
+            if(confirm("Voulez-vous remettre les scores à zéro ?")) {
+                db.ref('match').set({ position: 50, scoreMulti: 0, scoreConfort: 0 });
+            }
+        }
+    </script>
+</body>
+</html>
