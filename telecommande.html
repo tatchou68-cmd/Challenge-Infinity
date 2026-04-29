@@ -3,63 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Infinity Remote</title>
+    <title>Infinity Remote Pro</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         :root {
             --bleu: #0082c3;
             --rouge: #d32f2f;
-            --fond: #121212;
+            --fond: #0f0f0f;
+            --gris-bouton: #252525;
         }
 
         body { 
-            font-family: 'Segoe UI', sans-serif; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
             background: var(--fond); 
             color: white; 
             margin: 0; 
-            padding: 20px;
+            padding: 15px;
             display: flex; flex-direction: column; align-items: center;
-            touch-action: manipulation; /* Désactive le zoom auto au clic */
+            touch-action: manipulation;
         }
 
-        h2 { margin-bottom: 25px; font-weight: 900; letter-spacing: 1px; color: #eee; }
+        h2 { margin: 10px 0 20px 0; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; font-size: 1.2rem; }
 
         .group { 
-            width: 100%; max-width: 400px;
+            width: 100%; max-width: 450px;
             border-radius: 20px; padding: 15px; margin-bottom: 20px;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255,255,255,0.03);
             box-sizing: border-box;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .multi { border: 3px solid var(--bleu); box-shadow: 0 0 15px rgba(0, 130, 195, 0.3); }
-        .confort { border: 3px solid var(--rouge); box-shadow: 0 0 15px rgba(211, 47, 47, 0.3); }
+        .multi { border-top: 5px solid var(--bleu); box-shadow: 0 10px 30px rgba(0, 130, 195, 0.2); }
+        .confort { border-top: 5px solid var(--rouge); box-shadow: 0 10px 30px rgba(211, 47, 47, 0.2); }
 
-        h3 { margin-top: 0; font-size: 1.2rem; }
+        h3 { margin: 0 0 15px 0; font-size: 1rem; text-align: center; opacity: 0.9; }
 
-        button { 
-            width: 100%; padding: 18px; margin: 8px 0; 
-            font-size: 18px; font-weight: bold;
-            border: none; border-radius: 12px; cursor: pointer; 
-            color: white; transition: transform 0.1s, brightness 0.2s;
-            text-transform: uppercase;
+        /* Grille des joueurs */
+        .choix-joueurs { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 12px; 
+            margin-bottom: 15px;
         }
 
-        button:active { transform: scale(0.96); brightness: 1.2; }
+        .btn-joueur { 
+            background: var(--gris-bouton);
+            border: 1px solid #444;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
 
-        .btn-touche { background: #333; }
+        .btn-joueur:active { background: #444; transform: scale(0.95); }
+
+        .btn-joueur img { 
+            width: 40px; height: 40px; 
+            border-radius: 50%; 
+            margin-right: 12px; 
+            object-fit: cover;
+            background: #000;
+        }
+
+        /* Boutons d'action spéciale */
         .btn-but { 
+            width: 100%; padding: 15px;
             background: linear-gradient(135deg, #2e7d32, #4caf50); 
-            font-size: 22px; margin-top: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: none; border-radius: 12px;
+            color: white; font-size: 18px; font-weight: 900;
+            text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
         .reset { 
-            background: transparent; border: 2px opacity 0.5 solid #555; 
-            color: #777; width: 60%; margin-top: 30px; font-size: 14px;
+            background: transparent; border: 1px solid #444; 
+            color: #666; padding: 10px 20px; border-radius: 10px;
+            margin-top: 20px; font-size: 12px;
         }
 
-        .status { font-size: 12px; margin-top: 10px; color: #4caf50; }
+        .status { font-size: 11px; margin-top: 15px; color: #4caf50; opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -68,22 +94,21 @@
 
     <div class="group multi">
         <h3 style="color: var(--bleu)">MULTIMÉDIA</h3>
-        <button class="btn-touche" onclick="action('multi', 8)">+1 Vente (1U)</button>
-        <button class="btn-touche" onclick="action('multi', 15)">+2 Ventes (2U)</button>
-        <button class="btn-but" onclick="action('multi', 100)">⚽ BUT !</button>
+        <div class="choix-joueurs" id="liste-multi"></div>
+        <button class="btn-but" onclick="actionVente('multi', 'BUT MULTI', 100)">⚽ BUT !</button>
     </div>
 
     <div class="group confort">
         <h3 style="color: var(--rouge)">CONFORT</h3>
-        <button class="btn-touche" onclick="action('confort', -8)">+1 Vente (1U)</button>
-        <button class="btn-touche" onclick="action('confort', -15)">+2 Ventes (2U)</button>
-        <button class="btn-but" onclick="action('confort', -100)">⚽ BUT !</button>
+        <div class="choix-joueurs" id="liste-confort"></div>
+        <button class="btn-but" onclick="actionVente('confort', 'BUT CONFORT', -100)">⚽ BUT !</button>
     </div>
 
-    <button class="reset" onclick="resetMatch()">Réinitialiser le match</button>
-    <div id="notif" class="status">Connecté à Firebase</div>
+    <button class="reset" onclick="resetMatch()">Réinitialiser le score</button>
+    <div id="notif" class="status">Système connecté à Firebase</div>
 
     <script>
+        // CONFIGURATION FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyCqgVEYrpem4KgV8OXqFN9ybMNPIz8gg9o",
             authDomain: "challenge-infinity.firebaseapp.com",
@@ -93,37 +118,75 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        function action(equipe, valeur) {
+        // LISTE DES JOUEURS
+        const teamMulti = ["Anthony", "Bruno", "Lionel", "Mika", "Paolo", "Raph"];
+        const teamConfort = ["Christine", "Elias", "Julien", "Zina", "Yassine", "Severine"];
+
+        // GÉNÉRATION DES BOUTONS
+        function genererBoutons() {
+            const containerMulti = document.getElementById('liste-multi');
+            teamMulti.forEach(nom => {
+                containerMulti.innerHTML += `
+                    <button class="btn-joueur" onclick="actionVente('multi', '${nom}', 8)">
+                        <img src="Image/${nom}.png" onerror="this.src='Image/ballon.png'">
+                        <span>${nom}</span>
+                    </button>`;
+            });
+
+            const containerConfort = document.getElementById('liste-confort');
+            teamConfort.forEach(nom => {
+                containerConfort.innerHTML += `
+                    <button class="btn-joueur" onclick="actionVente('confort', '${nom}', -8)">
+                        <img src="Image/${nom}.png" onerror="this.src='Image/ballon.png'">
+                        <span>${nom}</span>
+                    </button>`;
+            });
+        }
+
+        // ACTION DE VENTE
+        function actionVente(equipe, nomJoueur, valeur) {
             const ref = db.ref('match');
             ref.once('value').then(snap => {
                 let data = snap.val() || { position: 50, scoreMulti: 0, scoreConfort: 0 };
                 
+                // On prépare les infos du dernier vendeur
+                data.dernierVendeur = nomJoueur;
+                data.equipeVendeur = equipe;
+                data.updateTime = Date.now(); // Utile pour rafraîchir l'écran TV
+
                 if (Math.abs(valeur) === 100) { 
                     if (equipe === 'multi') data.scoreMulti++;
                     else data.scoreConfort++;
-                    data.position = 50; // Retour au centre
+                    data.position = 50; // Le ballon revient au centre
                 } else {
                     data.position += valeur;
                 }
                 
-                // Sécurité pour ne pas sortir du terrain
+                // Limites du terrain
                 if (data.position > 92) data.position = 92;
                 if (data.position < 8) data.position = 8;
                 
                 ref.set(data);
-                vibrer();
+                
+                // Vibration mobile
+                if (window.navigator.vibrate) window.navigator.vibrate(50);
             });
         }
 
+        // RESET
         function resetMatch() {
-            if(confirm("Remettre les scores à zéro ?")) {
-                db.ref('match').set({ position: 50, scoreMulti: 0, scoreConfort: 0 });
+            if(confirm("Attention : Voulez-vous vraiment remettre les scores à zéro ?")) {
+                db.ref('match').set({ 
+                    position: 50, 
+                    scoreMulti: 0, 
+                    scoreConfort: 0, 
+                    dernierVendeur: "Nouveau Match" 
+                });
             }
         }
 
-        function vibrer() {
-            if (window.navigator.vibrate) window.navigator.vibrate(50);
-        }
+        // Lancement
+        genererBoutons();
     </script>
 </body>
 </html>
