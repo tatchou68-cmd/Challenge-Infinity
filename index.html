@@ -166,7 +166,7 @@ header p {
     font-weight: bold;
     color: white;
     text-transform: uppercase;
-    font-size: 1.5vw;
+    font-size: 1vw;
 }
 
 /* Bloc Multimédia (Gris/Bleu foncé incliné) */
@@ -183,7 +183,7 @@ header p {
     background: linear-gradient(180deg, #0082c3 0%, #005a87 100%);
     clip-path: polygon(5% 0, 95% 0, 100% 100%, 0% 100%); /* Forme trapèze */
     flex: 1;
-    justify-content: center;
+    justify-content: flex-start;
     flex-direction: column;
     margin: 0 -15px; /* Chevauchement pour l'effet de style */
     z-index: 2;
@@ -194,13 +194,13 @@ header p {
 .score-confort {
     background: linear-gradient(180deg, #3d1a1a 0%, #260d0d 100%);
     border-bottom: 4px solid var(--rouge-infinity);
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 5% 100%); /* Forme inclinée inverse */
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); /* Forme inclinée inverse */
     flex: 2;
     justify-content: flex-end;
-}
+   }
 
 /* Détails du texte à l'intérieur */
-.score-label { font-size: 0.8vw; opacity: 0.8; margin-bottom: -5px; }
+.score-label { font-size: 0.8vw; opacity: 0.8; margin-bottom: -10px; }
 #tableau-score { font-size: 3.5vw; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
 /* Icônes maillots (Optionnel si tu as des petites icônes) */
@@ -251,7 +251,7 @@ header p {
 
     <div id="footer-scores">
     <div class="score-segment score-multi">
-        <span style="color: var(--bleu-infinity); font-size: 2vw; margin-right: 15px;">👕</span>
+        <span style="color: var(--bleu-infinity); font-size: 2vw; margin-right: 15px;"><img src="maillot multi.png" class="figurine-fixe"></span>
         Équipe Multimédia
     </div>
 
@@ -262,7 +262,7 @@ header p {
 
     <div class="score-segment score-confort">
         Équipe Confort
-        <span style="color: var(--rouge-infinity); font-size: 2vw; margin-left: 15px;">👕</span>
+        <span style="color: var(--rouge-infinity); font-size: 2vw; margin-left: 15px;"><img src="maillot confort.png" class="figurine-fixe"></span>
     </div>
 </div>
 </div>
