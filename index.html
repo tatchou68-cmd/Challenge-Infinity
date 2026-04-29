@@ -3,83 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telecommande Infinity</title>
+    <title>Infinity Cup - Match de Ventes</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { font-family: sans-serif; background: #1a1a1a; color: white; text-align: center; padding: 20px; }
-        .group { border: 2px solid #444; padding: 15px; border-radius: 15px; margin-bottom: 20px; }
-        .multi { border-color: #0082c3; }
-        .confort { border-color: #d32f2f; }
-        button { 
-            width: 100%; padding: 15px; margin: 5px 0; font-size: 18px; font-weight: bold;
-            border: none; border-radius: 8px; cursor: pointer; color: white;
+        :root {
+            --bleu-infinity: #0082c3;
+            --rouge-infinity: #d32f2f;
+            --vert-terrain: #4caf50;
         }
-        .btn-1 { background: #444; }
-        .btn-2 { background: #666; }
-        .btn-but { background: #2e7d32; font-size: 22px; }
-        .reset { background: #b71c1c; margin-top: 30px; width: 50%; }
-        button {
-    touch-action: manipulation; /* Empêche le zoom au double-clic */
-    user-select: none;         /* Empêche de sélectionner le texte du bouton */
+
+        body {
+            margin: 0; background-color: #1a1a1a; font-family: 'Arial', sans-serif;
+            color: white; display: flex; justify-content: center; align-items: center;
+            height: 100vh; overflow: hidden;
+        }
+
+        #tv-screen {
+            width: 100vw; height: 56.25vw; max-height: 100vh; max-width: 177.78vh;
+            background: linear-gradient(to bottom, #004d73, #000);
+            position: relative; border: 10px solid #333;
+        }
+
+        header {
+    display: flex;
+    justify-content: space-between; /* Espace les logos et le texte */
+    align-items: center;
+    padding: 2px 50px;
+    background: linear-gradient(180deg, #1a1a1a 0%, #000000 100%);
+    border-bottom: 3px solid;
+    /* Crée la bordure dégradée bleu/rouge */
+    border-image: linear-gradient(to right, var(--bleu-infinity), var(--rouge-infinity)) 1;
+    height: 80px;
 }
+
+.header-title {
+    text-align: center;
+    flex-grow: 1;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.2vw;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 900;
+}
+
+header p {
+    margin: 0;
+    font-size: 0.9vw;
+    color: #ccc;
+    text-transform: uppercase;
+}
+
+/* Style des logos Infinity */
+.logo-infinity {
+    width: 90px;
+    height: auto;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.3));
+}
+
+       #stade {
+    position: absolute; 
+    top: 18%; 
+    left: 12%; 
+    width: 76%; 
+    height: 60%;
+    /* CORRECTION ICI : on utilise url() et on enlève le src= */
+    background-image: url('Image/terrain.png'); 
+    background-size: 100% 100%; 
+    background-repeat: no-repeat;
+    border: 4px solid white; 
+    display: flex;
+}
+
+        .zone {
+            flex: 1; border-right: 2px solid rgba(255,255,255,0.3);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1vw; text-transform: uppercase; font-weight: bold; text-align: center;
+        }
+
+        
+/* Base pour les deux colonnes */
+.cote {
+    position: absolute;
+    top: 18%;
+    width: 10%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Style identique pour les deux côtés (2 colonnes) */
+.cote-gauche, .cote-droite {
+    position: absolute;
+    top: 18%;
+    width: 12%;          /* Largeur augmentée pour accueillir 2 colonnes */
+    height: 60%;
+    display: flex;
+    flex-direction: row; /* Aligne les colonnes côte à côte */
+    flex-wrap: wrap;     /* Permet de passer à la ligne */
+    justify-content: center;
+    align-content: center;
+    gap: 8px;            /* Espace entre les joueurs */
+}
+
+.cote-gauche { left: 1%; }
+.cote-droite { right: 1%; }
+
+/* Taille des joueurs ajustée pour le format 2 colonnes */
+.figurine-fixe {
+    width: 45%; /* Environ la moitié de la largeur de la zone */
+    height: auto;
+    filter: drop-shadow(2px 4px 6px black);
+}
+
+/* Taille des visages des collègues */
+.figurine-fixe { 
+    width: 40%; /* Ajuste selon tes préférences */
+    height: auto; 
+    filter: drop-shadow(2px 4px 6px black); 
+}
+
+/* Taille et centrage du ballon */
+#ballon {
+    position: absolute; 
+    width: 50px; /* Taille fixe pour éviter qu'il soit géant */
+    height: 50px;
+    left: 50%; 
+    top: 45%; 
+    transform: translate(-50%, -50%); /* Centrage parfait sur son point de position */
+    transition: all 0.8s ease-out;
+    z-index: 10;
+}
+
+#ballon img { 
+    width: 100%; 
+    height: auto; 
+}
+        /* Le conteneur principal tout en bas */
+#footer-scores {
+    position: absolute;
+    bottom: 20px;
+    width: 90%;
+    left: 6%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5));
+}
+
+/* Base commune pour les blocs équipe et score */
+.score-segment {
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+    font-size: 1.5vw;
+}
+
+/* Bloc Multimédia (Gris/Bleu foncé incliné) */
+.score-multi {
+    background: linear-gradient(180deg, #1a3a5a 0%, #0d1f33 100%);
+    border-bottom: 4px solid var(--bleu-infinity);
+    clip-path: polygon(0 0, 100% 0, 95% 100%, 0% 100%); /* Forme inclinée */
+    flex: 2;
+    justify-content: flex-start;
+}
+
+/* Bloc central du Score (Bleu clair incliné) */
+.score-central {
+    background: linear-gradient(180deg, #0082c3 0%, #005a87 100%);
+    clip-path: polygon(5% 0, 95% 0, 100% 100%, 0% 100%); /* Forme trapèze */
+    flex: 1;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 -15px; /* Chevauchement pour l'effet de style */
+    z-index: 2;
+    border-top: 2px solid rgba(255,255,255,0.3);
+}
+
+/* Bloc Confort (Gris/Rouge foncé incliné) */
+.score-confort {
+    background: linear-gradient(180deg, #3d1a1a 0%, #260d0d 100%);
+    border-bottom: 4px solid var(--rouge-infinity);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 5% 100%); /* Forme inclinée inverse */
+    flex: 2;
+    justify-content: flex-end;
+}
+
+/* Détails du texte à l'intérieur */
+.score-label { font-size: 0.8vw; opacity: 0.8; margin-bottom: -5px; }
+#tableau-score { font-size: 3.5vw; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+/* Icônes maillots (Optionnel si tu as des petites icônes) */
+.maillot { width: 30px; margin: 0 15px; }
+        }
+        .score-box { padding: 0 40px; font-size: 2.5vw; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h2>🕹️ CONTROLE MATCH</h2>
 
-    <div class="group multi">
-        <h3>EQUIPE MULTIMEDIA</h3>
-        <button class="btn-1" onclick="action('multi', 10)">+1 Touche (1U)</button>
-        <button class="btn-2" onclick="action('multi', 20)">+2 Touches (2U)</button>
-        <button class="btn-but" onclick="action('multi', 100)">⚽ BUT DIRECT !</button>
+<div id="tv-screen">
+    <header>
+    <img src="Image/infinity bleu.png" class="logo-infinity" alt="Infinity">
+
+    <div class="header-title">
+        <h1>INFINITY CUP - MULTIMÉDIA vs CONFORT</h1>
+        <p>VENDS UN INFINITY, FAIS AVANCER LE BALLON !</p>
     </div>
 
-    <div class="group confort">
-        <h3>EQUIPE CONFORT</h3>
-        <button class="btn-1" onclick="action('confort', -10)">+1 Touche (1U)</button>
-        <button class="btn-2" onclick="action('confort', -20)">+2 Touches (2U)</button>
-        <button class="btn-but" onclick="action('confort', -100)">⚽ BUT DIRECT !</button>
+    <img src="Image/infinity rouge.png" class="logo-infinity" alt="Infinity">
+</header>
+
+<div class="cote cote-gauche">
+    <img src="anthony.png" class="figurine-fixe">
+    <img src="bruno.png" class="figurine-fixe">
+    <img src="lionel.png" class="figurine-fixe">
+    <img src="mika.png" class="figurine-fixe">
+    <img src="paolo.png" class="figurine-fixe">
+    <img src="raph.png" class="figurine-fixe">
+    <img src="renaud.png" class="figurine-fixe">
+    <img src="stephane.png" class="figurine-fixe">
+</div>
+
+<div id="stade">
+    <div id="ballon">
+        <img src="Image/ballon.png" alt="⚽">
+    </div>
+</div>
+
+<div class="cote cote-droite">
+    <img src="christine.png" class="figurine-fixe">
+    <img src="Image/Elias.png" class="figurine-fixe">
+    <img src="Image/Julien.png" class="figurine-fixe">
+    <img src="Image/Zina.png" class="figurine-fixe">
+    <img src="Image/Yassine.png" class="figurine-fixe">
+    <img src="Image/Severine.png" class="figurine-fixe">
+</div>
+
+    <div id="footer-scores">
+    <div class="score-segment score-multi">
+        <span style="color: var(--bleu-infinity); font-size: 2vw; margin-right: 15px;">👕</span>
+        Équipe Multimédia
     </div>
 
-    <button class="reset" onclick="reset()">Réinitialiser Match</button>
+    <div class="score-segment score-central">
+        <div class="score-label">SCORE :</div>
+        <div id="tableau-score">0 - 0</div>
+    </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCqgVEYrpem4KgV8OXqFN9ybMNPIz8gg9o",
-            authDomain: "challenge-infinity.firebaseapp.com",
-            databaseURL: "https://challenge-infinity-default-rtdb.firebaseio.com",
-            projectId: "challenge-infinity",
-        };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+    <div class="score-segment score-confort">
+        Équipe Confort
+        <span style="color: var(--rouge-infinity); font-size: 2vw; margin-left: 15px;">👕</span>
+    </div>
+</div>
+</div>
 
-        function action(equipe, valeur) {
-            const ref = db.ref('match');
-            ref.once('value').then(snap => {
-                let data = snap.val() || { position: 50, scoreMulti: 0, scoreConfort: 0 };
-                
-                if (Math.abs(valeur) === 100) { // Logique de BUT
-                    if (equipe === 'multi') data.scoreMulti++;
-                    else data.scoreConfort++;
-                    data.position = 50; // Retour au centre
-                } else {
-                    data.position += valeur;
-                }
-                
-                // Limites du terrain
-                if (data.position > 90) data.position = 90;
-                if (data.position < 10) data.position = 10;
-                
-                ref.set(data);
-            });
-        }
+<script>
+    // Config Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyCqgVEYrpem4KgV8OXqFN9ybMNPIz8gg9o",
+        authDomain: "challenge-infinity.firebaseapp.com",
+        databaseURL: "https://challenge-infinity-default-rtdb.europe-west1.firebasedatabase.app/", // Vérifiez cette URL dans votre console Firebase !
+        projectId: "challenge-infinity",
+    };
 
-        function reset() {
-            if(confirm("Voulez-vous remettre les scores à zéro ?")) {
-                db.ref('match').set({ position: 50, scoreMulti: 0, scoreConfort: 0 });
-            }
-        }
-    </script>
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+   db.ref('match').on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+        // Seule la position horizontale change
+        document.getElementById('ballon').style.left = data.position + "%";
+        document.getElementById('tableau-score').innerText = data.scoreMulti + " - " + data.scoreConfort;
+    }
+});
+</script>
 </body>
 </html>

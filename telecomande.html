@@ -2,49 +2,92 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Télécommande Infinity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Infinity Remote</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { font-family: sans-serif; background: #1a1a1a; color: white; text-align: center; padding: 20px; }
-        .group { border: 2px solid #444; padding: 15px; border-radius: 15px; margin-bottom: 20px; }
-        .multi { border-color: #0082c3; }
-        .confort { border-color: #d32f2f; }
-        button { 
-            width: 100%; padding: 15px; margin: 5px 0; font-size: 18px; font-weight: bold;
-            border: none; border-radius: 8px; cursor: pointer; color: white;
+        :root {
+            --bleu: #0082c3;
+            --rouge: #d32f2f;
+            --fond: #121212;
         }
-        .btn-1 { background: #444; }
-        .btn-2 { background: #666; }
-        .btn-but { background: #2e7d32; font-size: 22px; }
-        .reset { background: #b71c1c; margin-top: 30px; width: 50%; }
+
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: var(--fond); 
+            color: white; 
+            margin: 0; 
+            padding: 20px;
+            display: flex; flex-direction: column; align-items: center;
+            touch-action: manipulation; /* Désactive le zoom auto au clic */
+        }
+
+        h2 { margin-bottom: 25px; font-weight: 900; letter-spacing: 1px; color: #eee; }
+
+        .group { 
+            width: 100%; max-width: 400px;
+            border-radius: 20px; padding: 15px; margin-bottom: 20px;
+            background: rgba(255,255,255,0.05);
+            box-sizing: border-box;
+        }
+
+        .multi { border: 3px solid var(--bleu); box-shadow: 0 0 15px rgba(0, 130, 195, 0.3); }
+        .confort { border: 3px solid var(--rouge); box-shadow: 0 0 15px rgba(211, 47, 47, 0.3); }
+
+        h3 { margin-top: 0; font-size: 1.2rem; }
+
+        button { 
+            width: 100%; padding: 18px; margin: 8px 0; 
+            font-size: 18px; font-weight: bold;
+            border: none; border-radius: 12px; cursor: pointer; 
+            color: white; transition: transform 0.1s, brightness 0.2s;
+            text-transform: uppercase;
+        }
+
+        button:active { transform: scale(0.96); brightness: 1.2; }
+
+        .btn-touche { background: #333; }
+        .btn-but { 
+            background: linear-gradient(135deg, #2e7d32, #4caf50); 
+            font-size: 22px; margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .reset { 
+            background: transparent; border: 2px opacity 0.5 solid #555; 
+            color: #777; width: 60%; margin-top: 30px; font-size: 14px;
+        }
+
+        .status { font-size: 12px; margin-top: 10px; color: #4caf50; }
     </style>
 </head>
 <body>
-    <h2>🕹️ CONTRÔLE MATCH</h2>
+
+    <h2>🕹️ INFINITY CONTROL</h2>
 
     <div class="group multi">
-        <h3>EQUIPE MULTIMÉDIA</h3>
-        <button class="btn-1" onclick="action('multi', 10)">+1 Touche (1U)</button>
-        <button class="btn-2" onclick="action('multi', 20)">+2 Touches (2U)</button>
-        <button class="btn-but" onclick="action('multi', 100)">⚽ BUT DIRECT !</button>
+        <h3 style="color: var(--bleu)">MULTIMÉDIA</h3>
+        <button class="btn-touche" onclick="action('multi', 8)">+1 Vente (1U)</button>
+        <button class="btn-touche" onclick="action('multi', 15)">+2 Ventes (2U)</button>
+        <button class="btn-but" onclick="action('multi', 100)">⚽ BUT !</button>
     </div>
 
     <div class="group confort">
-        <h3>EQUIPE CONFORT</h3>
-        <button class="btn-1" onclick="action('confort', -10)">+1 Touche (1U)</button>
-        <button class="btn-2" onclick="action('confort', -20)">+2 Touches (2U)</button>
-        <button class="btn-but" onclick="action('confort', -100)">⚽ BUT DIRECT !</button>
+        <h3 style="color: var(--rouge)">CONFORT</h3>
+        <button class="btn-touche" onclick="action('confort', -8)">+1 Vente (1U)</button>
+        <button class="btn-touche" onclick="action('confort', -15)">+2 Ventes (2U)</button>
+        <button class="btn-but" onclick="action('confort', -100)">⚽ BUT !</button>
     </div>
 
-    <button class="reset" onclick="reset()">Réinitialiser Match</button>
+    <button class="reset" onclick="resetMatch()">Réinitialiser le match</button>
+    <div id="notif" class="status">Connecté à Firebase</div>
 
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyCqgVEYrpem4KgV8OXqFN9ybMNPIz8gg9o",
             authDomain: "challenge-infinity.firebaseapp.com",
-            databaseURL: "https://challenge-infinity-default-rtdb.firebaseio.com",
+            databaseURL: "https://challenge-infinity-default-rtdb.europe-west1.firebasedatabase.app/",
             projectId: "challenge-infinity",
         };
         firebase.initializeApp(firebaseConfig);
@@ -55,7 +98,7 @@
             ref.once('value').then(snap => {
                 let data = snap.val() || { position: 50, scoreMulti: 0, scoreConfort: 0 };
                 
-                if (Math.abs(valeur) === 100) { // Logique de BUT
+                if (Math.abs(valeur) === 100) { 
                     if (equipe === 'multi') data.scoreMulti++;
                     else data.scoreConfort++;
                     data.position = 50; // Retour au centre
@@ -63,18 +106,23 @@
                     data.position += valeur;
                 }
                 
-                // Limites du terrain
-                if (data.position > 90) data.position = 90;
-                if (data.position < 10) data.position = 10;
+                // Sécurité pour ne pas sortir du terrain
+                if (data.position > 92) data.position = 92;
+                if (data.position < 8) data.position = 8;
                 
                 ref.set(data);
+                vibrer();
             });
         }
 
-        function reset() {
-            if(confirm("Voulez-vous remettre les scores à zéro ?")) {
+        function resetMatch() {
+            if(confirm("Remettre les scores à zéro ?")) {
                 db.ref('match').set({ position: 50, scoreMulti: 0, scoreConfort: 0 });
             }
+        }
+
+        function vibrer() {
+            if (window.navigator.vibrate) window.navigator.vibrate(50);
         }
     </script>
 </body>
