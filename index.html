@@ -270,11 +270,29 @@ header p {
 <script>
     // Config Firebase
     const firebaseConfig = {
-        apiKey: "AIzaSyCqgVEYrpem4KgV8OXqFN9ybMNPIz8gg9o",
-        authDomain: "challenge-infinity.firebaseapp.com",
-        databaseURL: "https://challenge-infinity-default-rtdb.europe-west1.firebasedatabase.app/", // Vérifiez cette URL dans votre console Firebase !
-        projectId: "challenge-infinity",
-    };
+    apiKey: "AIzaSyCqgVEYrpem4KgV8OXqFN9ybMNPIz8gg9o",
+    authDomain: "challenge-infinity.firebaseapp.com",
+    databaseURL: "https://challenge-infinity-default-rtdb.europe-west1.firebasedatabase.app/",
+    projectId: "challenge-infinity",
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// Écouter les changements en temps réel
+db.ref('match').on('value', (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+        // Déplacer le ballon
+        const ballon = document.getElementById('ballon');
+        ballon.style.left = data.position + "%";
+
+        // Mettre à jour le score
+        const scoreElement = document.getElementById('tableau-score');
+        scoreElement.innerText = data.scoreMulti + " - " + data.scoreConfort;
+        
+        console.log("Données reçues :", data);
+    }
+});
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
