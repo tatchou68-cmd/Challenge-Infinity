@@ -39,7 +39,6 @@
 
         h3 { margin: 0 0 15px 0; font-size: 1rem; text-align: center; opacity: 0.9; }
 
-        /* Grille des joueurs */
         .choix-joueurs { 
             display: grid; 
             grid-template-columns: 1fr 1fr; 
@@ -57,20 +56,21 @@
             color: white;
             font-size: 14px;
             font-weight: 600;
-            transition: background 0.2s;
+            transition: all 0.2s;
+            text-align: left;
         }
 
-        .btn-joueur:active { background: #444; transform: scale(0.95); }
+        .btn-joueur:active { background: #444; transform: scale(0.95); border-color: white; }
 
         .btn-joueur img { 
-            width: 40px; height: 40px; 
+            width: 35px; height: 35px; 
             border-radius: 50%; 
-            margin-right: 12px; 
+            margin-right: 10px; 
             object-fit: cover;
             background: #000;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* Boutons d'action spéciale */
         .btn-but { 
             width: 100%; padding: 15px;
             background: linear-gradient(135deg, #2e7d32, #4caf50); 
@@ -79,9 +79,11 @@
             text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
 
+        .btn-but:active { transform: scale(0.98); filter: brightness(1.2); }
+
         .reset { 
-            background: transparent; border: 1px solid #444; 
-            color: #666; padding: 10px 20px; border-radius: 10px;
+            background: transparent; border: 1px solid #333; 
+            color: #555; padding: 10px 20px; border-radius: 10px;
             margin-top: 20px; font-size: 12px;
         }
 
@@ -104,8 +106,8 @@
         <button class="btn-but" onclick="actionVente('confort', 'BUT CONFORT', -100)">⚽ BUT !</button>
     </div>
 
-    <button class="reset" onclick="resetMatch()">Réinitialiser le score</button>
-    <div id="notif" class="status">Système connecté à Firebase</div>
+    <button class="reset" onclick="resetMatch()">Réinitialiser le match</button>
+    <div id="notif" class="status">Connecté au stade</div>
 
     <script>
         // CONFIGURATION FIREBASE
@@ -118,74 +120,73 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // LISTE DES JOUEURS
-        const teamMulti = ["Anthony", "Bruno", "Lionel", "Mika", "Paolo", "Raph"];
-        const teamConfort = ["Christine", "Elias", "Julien", "Zina", "Yassine", "Severine"];
+        // LISTES DES JOUEURS (Assure-toi que les noms correspondent aux fichiers .png)
+        const teamMulti = ["Anthony", "Bruno", "Lionel", "Mika", "Paolo", "Raph", "Renaud", "Stephane", "Nico"];
+        const teamConfort = ["Christine", "Elias", "Julien", "Yassine", "Severine", "Fatima", "Emilia", "Olivier", "Hayet"];
 
-        // GÉNÉRATION DES BOUTONS
         function genererBoutons() {
             const containerMulti = document.getElementById('liste-multi');
             teamMulti.forEach(nom => {
+                const nomLower = nom.toLowerCase();
                 containerMulti.innerHTML += `
                     <button class="btn-joueur" onclick="actionVente('multi', '${nom}', 8)">
-                        <img src="anthony.png" onerror="this.src='Image/ballon.png'">
+                        <img src="${nomLower}.png" onerror="this.src='ballon.png'">
                         <span>${nom}</span>
                     </button>`;
             });
 
             const containerConfort = document.getElementById('liste-confort');
             teamConfort.forEach(nom => {
+                const nomLower = nom.toLowerCase();
                 containerConfort.innerHTML += `
                     <button class="btn-joueur" onclick="actionVente('confort', '${nom}', -8)">
-                        <img src="Image/${nom}.png" onerror="this.src='Image/ballon.png'">
+                        <img src="${nomLower}.png" onerror="this.src='Image/ballon.png'">
                         <span>${nom}</span>
                     </button>`;
             });
         }
 
-        // ACTION DE VENTE
         function actionVente(equipe, nomJoueur, valeur) {
             const ref = db.ref('match');
             ref.once('value').then(snap => {
                 let data = snap.val() || { position: 50, scoreMulti: 0, scoreConfort: 0 };
                 
-                // On prépare les infos du dernier vendeur
                 data.dernierVendeur = nomJoueur;
                 data.equipeVendeur = equipe;
-                data.updateTime = Date.now(); // Utile pour rafraîchir l'écran TV
+                data.updateTime = Date.now();
 
                 if (Math.abs(valeur) === 100) { 
                     if (equipe === 'multi') data.scoreMulti++;
                     else data.scoreConfort++;
-                    data.position = 50; // Le ballon revient au centre
+                    data.position = 50;
                 } else {
                     data.position += valeur;
                 }
                 
-                // Limites du terrain
                 if (data.position > 92) data.position = 92;
                 if (data.position < 8) data.position = 8;
                 
                 ref.set(data);
                 
-                // Vibration mobile
-                if (window.navigator.vibrate) window.navigator.vibrate(50);
+                // Feedback visuel
+                const notif = document.getElementById('notif');
+                notif.innerText = `Dernière action : ${nomJoueur} (${new Date().toLocaleTimeString()})`;
+                if (window.navigator.vibrate) window.navigator.vibrate(40);
             });
         }
 
-        // RESET
         function resetMatch() {
-            if(confirm("Attention : Voulez-vous vraiment remettre les scores à zéro ?")) {
+            if(confirm("Remettre les scores à zéro ?")) {
                 db.ref('match').set({ 
                     position: 50, 
                     scoreMulti: 0, 
                     scoreConfort: 0, 
-                    dernierVendeur: "Nouveau Match" 
+                    dernierVendeur: "Nouveau Match",
+                    updateTime: Date.now()
                 });
             }
         }
 
-        // Lancement
         genererBoutons();
     </script>
 </body>
