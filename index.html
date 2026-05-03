@@ -43,11 +43,11 @@
         header p { margin: 0; font-size: 0.9vw; color: #ccc; }
         .logo-infinity { width: 90px; height: auto; }
 
-        #stade {
+       #stade {
     position: absolute;
     top: 12%;      
-    left: 20%;     /* On centre avec width 60% -> (100-60)/2 = 20 */
-    width: 60%;    
+    left: 25%;     /* (100% - 50%) / 2 = 25% pour centrer */
+    width: 50%;    /* On réduit pour laisser de la place aux côtés */
     height: 70%;   
     background-image: url('terrain.png');
     background-size: 100% 100%;
@@ -57,27 +57,26 @@
 
 .cote-gauche, .cote-droite {
     position: absolute;
-    top: 10%;               /* On remonte un peu pour gagner de l'espace vertical */
-    width: 180px;           /* Plus large pour de grosses figurines */
-    height: 75%;            /* Plus haut pour étaler les rangées */
+    top: 10%;
+    width: 170px;           /* On réduit un tout petit peu la zone totale */
+    height: 75%;
     display: grid;
-    grid-template-columns: 85px 85px; /* Deux colonnes larges de 85px */
-    grid-gap: 10px 8px;     /* Espace vertical de 10px, horizontal de 8px */
+    grid-template-columns: 80px 80px; /* Deux colonnes de 80px */
+    grid-gap: 10px 5px;
     justify-content: center;
     align-content: center;
     z-index: 2;
 }
 
-.cote-gauche { left: 0.5%; }
-.cote-droite { right: 0.5%; }
+.cote-gauche { left: 10px; }  /* On décolle à peine du bord */
+.cote-droite { right: 10px; }
 
         .figurine-fixe { 
-    width: 100%;            /* Prend toute la place des 85px alloués */
+    width: 75px;            /* Un peu moins que les 80px de la colonne */
     height: auto;
-    max-height: 14vh;       /* Taille XXL sur l'écran */
+    max-height: 14vh;       
     object-fit: contain;
-    filter: drop-shadow(4px 6px 10px rgba(0,0,0,0.9)); /* Ombre plus forte pour le relief */
-    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(4px 6px 10px rgba(0,0,0,0.9));
 }
 
         #ballon {
