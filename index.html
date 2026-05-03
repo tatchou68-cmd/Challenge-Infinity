@@ -58,36 +58,27 @@
 
         .cote-gauche, .cote-droite {
     position: absolute;
-    top: 15%;
-    width: 15%;
-    height: 70%;
-
+    top: 12%;       /* Ajuste la hauteur pour aligner avec le haut du stade */
+    width: 10%;      /* Donne un peu plus d'espace pour la visibilité */
+    height: 75%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-content: center;
-    gap: 10px;
+    justify-content: space-between; /* Espace les joueurs de haut en bas */
+    align-items: center;
+    z-index: 2;
 }
-        .cote-gauche { left: 0%; }
-        .cote-droite { right: 0%; }
+.cote-gauche { left: 2%; }  /* Écarte un peu du bord gauche */
+.cote-droite { right: 2%; } /* Écarte un peu du bord droit */
 
         .figurine-fixe { 
-    width: 3.5vw;
-    max-height: 7vh;
+    width: auto;
+    height: 7vh;        /* Hauteur fixe par rapport à l'écran pour éviter l'effet "géant" */
+    max-width: 60px;
     object-fit: contain;
-    display: block;
-    margin: 0 auto;
-    height: auto;
-
-    filter: drop-shadow(2px 4px 6px black);
-
+    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.7));
     transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-
-    backface-visibility: hidden;
-    transform-style: preserve-3d;
 }
-
     .figurine-fixe:hover {
         transform: scale(1.1);
     }
