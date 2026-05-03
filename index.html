@@ -46,8 +46,8 @@
        #stade {
     position: absolute;
     top: 12%;      
-    left: 25%;     /* (100% - 50%) / 2 = 25% pour centrer */
-    width: 50%;    /* On réduit pour laisser de la place aux côtés */
+    left: 26%;     /* (100% - 48%) / 2 = 26% pour centrer */
+    width: 48%;    
     height: 70%;   
     background-image: url('terrain.png');
     background-size: 100% 100%;
@@ -58,11 +58,12 @@
 .cote-gauche, .cote-droite {
     position: absolute;
     top: 10%;
-    width: 170px;           /* On réduit un tout petit peu la zone totale */
+    width: 150px;           /* On réduit de 170px à 150px pour laisser de l'air */
     height: 75%;
     display: grid;
-    grid-template-columns: 80px 80px; /* Deux colonnes de 80px */
-    grid-gap: 10px 5px;
+    /* On force 2 colonnes de 70px */
+    grid-template-columns: 70px 70px; 
+    grid-gap: 8px 5px;      /* Espace entre les figurines */
     justify-content: center;
     align-content: center;
     z-index: 2;
@@ -72,11 +73,12 @@
 .cote-droite { right: 10px; }
 
         .figurine-fixe { 
-    width: 75px;            /* Un peu moins que les 80px de la colonne */
+    width: 65px;            /* On réduit de 75px à 65px */
     height: auto;
-    max-height: 14vh;       
+    max-height: 13vh;       /* Un peu moins haut pour ne pas saturer l'écran */
     object-fit: contain;
     filter: drop-shadow(4px 6px 10px rgba(0,0,0,0.9));
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
         #ballon {
