@@ -45,40 +45,38 @@
 
         #stade {
     position: absolute;
-    top: 12%;
-    left: 18%;    /* On le recentre avec les nouvelles marges */
-    width: 64%;   /* Terrain plus grand */
-    height: 70%;
+    top: 12%;      
+    left: 20%;     /* On centre avec width 60% -> (100-60)/2 = 20 */
+    width: 60%;    
+    height: 70%;   
     background-image: url('terrain.png');
     background-size: 100% 100%;
-    background-position: center;
     border: 4px solid white;
     z-index: 1;
 }
 
 .cote-gauche, .cote-droite {
     position: absolute;
-    top: 12%;
-    width: 130px;           /* Largeur fixe pour empêcher la 3ème colonne */
-    height: 65%;
+    top: 10%;               /* On remonte un peu pour gagner de l'espace vertical */
+    width: 180px;           /* Plus large pour de grosses figurines */
+    height: 75%;            /* Plus haut pour étaler les rangées */
     display: grid;
-    /* On force 2 colonnes de 60px chacune */
-    grid-template-columns: 60px 60px; 
-    grid-gap: 5px 10px;     /* 5px vertical, 10px horizontal */
+    grid-template-columns: 85px 85px; /* Deux colonnes larges de 85px */
+    grid-gap: 10px 8px;     /* Espace vertical de 10px, horizontal de 8px */
     justify-content: center;
     align-content: center;
     z-index: 2;
 }
 
-.cote-gauche { left: 1%; }
-.cote-droite { right: 1%; }
+.cote-gauche { left: 0.5%; }
+.cote-droite { right: 0.5%; }
 
         .figurine-fixe { 
-    width: 55px;            /* Un peu moins que la largeur de la colonne */
+    width: 100%;            /* Prend toute la place des 85px alloués */
     height: auto;
-    max-height: 11vh;       
+    max-height: 14vh;       /* Taille XXL sur l'écran */
     object-fit: contain;
-    filter: drop-shadow(3px 4px 5px rgba(0,0,0,0.8));
+    filter: drop-shadow(4px 6px 10px rgba(0,0,0,0.9)); /* Ombre plus forte pour le relief */
     transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
