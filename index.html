@@ -21,10 +21,14 @@
         }
 
         #tv-screen {
-            width: 100vw; height: 56.25vw; max-height: 100vh; max-width: 177.78vh;
-            background: radial-gradient(circle, #004d73, #000);
-            position: relative; border: 10px solid #333;
-        }
+    width: 100vw;
+    height: 100vh;
+    aspect-ratio: 16 / 9;
+    margin: auto;
+    background: radial-gradient(circle, #004d73, #000);
+    position: relative;
+    overflow: hidden;
+}
 
         header {
             display: flex; justify-content: space-between; align-items: center;
@@ -35,43 +39,59 @@
         }
 
         .header-title { text-align: center; flex-grow: 1; }
-        header h1 { margin: 0; font-size: 2.2vw; text-transform: uppercase; }
+        header h1 { margin: 0; font-size: 2.5vh; text-transform: uppercase; }
         header p { margin: 0; font-size: 0.9vw; color: #ccc; }
         .logo-infinity { width: 90px; height: auto; }
 
         #stade {
-            position: relative; top: 18%; left: 12%; width: 76%; height: 60%;
-            overflow: visible; /* Très important pour que le ballon puisse toucher le bord */
-            background-image: url('terrain.png'); 
-            background-size: 100% 100%; background-repeat: no-repeat;
-            border: 4px solid white;
-        }
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    width: 60%;
+    height: 55%;
+
+    background-image: url('terrain.png');
+    background-size: cover;
+    background-position: center;
+    border: 4px solid white;
+}
 
         .cote-gauche, .cote-droite {
-            position: absolute; top: 18%; width: 12%; height: 60%;
-            display: flex; flex-wrap: wrap; justify-content: center; align-content: center; gap: 8px;
-        align-content: center;
-        gap: 10px;
-        }
+    position: absolute;
+    top: 15%;
+    width: 15%;
+    height: 70%;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    gap: 12px;
+}
         .cote-gauche { left: 0%; }
         .cote-droite { right: 0%; }
 
         .figurine-fixe { 
-    display: block;
-    width: 3.5vw; 
-    max-width: 8vh;
-    min-width: 40px;
-    height: auto; 
-    object-fit: contain;
+    width: 5vw;
+    max-width: 90px;
+    min-width: 50px;
+    height: auto;
+
+    filter: drop-shadow(2px 4px 6px black);
+
     transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    z-index: 1;
-    /* AJOUTE CES LIGNES ICI */
 
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
 }
 
+    .figurine-fixe:hover {
+        transform: scale(1.1);
+    }
+
         #ballon {
-            position: absolute; width: 50px; height: 50px;
+            position: absolute; width: 4vw; max-width: 60px; min-width: 30px; height: 50px;
             left: 50%; top: 45%; transform: translate(-50%, -50%);
             transition: all 2s ease-out; z-index: 10;
         }
