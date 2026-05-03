@@ -58,24 +58,28 @@
 
         .cote-gauche, .cote-droite {
     position: absolute;
-    top: 12%;       /* Ajuste la hauteur pour aligner avec le haut du stade */
-    width: 10%;      /* Donne un peu plus d'espace pour la visibilité */
-    height: 75%;
+    top: 15%;
+    width: 18%;             /* On élargit la zone pour laisser place à 2 colonnes */
+    height: 70%;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Espace les joueurs de haut en bas */
-    align-items: center;
+    flex-direction: row;    /* Les éléments se mettent côte à côte */
+    flex-wrap: wrap;        /* S'il n'y a plus de place, ils passent à la ligne (2ème colonne) */
+    justify-content: center;
+    align-content: center;
+    gap: 15px;              /* Espace entre les figurines */
     z-index: 2;
 }
-.cote-gauche { left: 2%; }  /* Écarte un peu du bord gauche */
-.cote-droite { right: 2%; } /* Écarte un peu du bord droit */
+
+.cote-gauche { left: 1%; }
+.cote-droite { right: 1%; }
+
 
         .figurine-fixe { 
-    width: auto;
-    height: 7vh;        /* Hauteur fixe par rapport à l'écran pour éviter l'effet "géant" */
-    max-width: 60px;
+    width: 4vw;             /* Largeur adaptée pour le double colonne */
+    height: auto;
+    max-height: 12vh;       /* Limite la hauteur pour que les 9 joueurs rentrent */
     object-fit: contain;
-    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.7));
+    filter: drop-shadow(2px 4px 6px black);
     transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
 }
