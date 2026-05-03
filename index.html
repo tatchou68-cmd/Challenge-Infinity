@@ -59,29 +59,29 @@
         .cote-gauche, .cote-droite {
     position: absolute;
     top: 15%;
-    width: 18%;             /* Largeur suffisante pour deux colonnes */
+    width: 15%;             /* Largeur idéale pour 2 colonnes sur TV */
     height: 70%;
-    display: grid;          /* On passe en mode Grille */
-    grid-template-columns: repeat(2, 1fr); /* FORCE la création de 2 colonnes égales */
-    grid-gap: 10px;         /* Espace entre les joueurs */
-    justify-items: center;  /* Centre les joueurs horizontalement */
-    align-items: center;    /* Centre les joueurs verticalement */
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* FORCE les 2 colonnes */
+    grid-template-rows: repeat(5, 1fr);    /* Prépare 5 rangées */
+    grid-gap: 15px 5px;     /* Espace : 15px vertical, 5px horizontal */
+    justify-items: center;
+    align-items: center;
     z-index: 2;
 }
 
-.cote-gauche { left: 1%; }
-.cote-droite { right: 1%; }
+.cote-gauche { left: 2%; }  /* Positionne les bleus à gauche */
+.cote-droite { right: 2%; } /* Positionne les rouges à droite */
 
 
         .figurine-fixe { 
-    width: 100%;            /* Prend la largeur de sa colonne dans la grille */
-    max-width: 65px;        /* Taille max pour garder l'aspect de ta capture d'écran */
+    width: 100%;            /* S'adapte à la largeur de la colonne */
+    max-width: 55px;        /* Taille max pour garder la netteté */
     height: auto;
-    max-height: 12vh;       /* Limite la hauteur pour que tout rentre verticalement */
+    max-height: 11vh;       /* Limite la hauteur pour éviter les chevauchements */
     object-fit: contain;
-    filter: drop-shadow(2px 4px 6px black);
+    filter: drop-shadow(2px 4px 5px rgba(0,0,0,0.8));
     transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
 }
 
         #ballon {
