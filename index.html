@@ -45,42 +45,39 @@
 
         #stade {
     position: absolute;
-    top: 20%;
-    left: 20%;
-    width: 60%;
-    height: 55%;
-
+    top: 18%;
+    left: 13%;    /* On le recentre avec les nouvelles marges */
+    width: 74%;   /* Terrain plus grand */
+    height: 58%;
     background-image: url('terrain.png');
-    background-size: cover;
+    background-size: 100% 100%;
     background-position: center;
     border: 4px solid white;
+    z-index: 1;
 }
 
         .cote-gauche, .cote-droite {
     position: absolute;
-    top: 15%;
-    width: 15%;             /* Largeur idéale pour 2 colonnes sur TV */
-    height: 70%;
+    top: 18%;
+    width: 11%;             /* Zone plus étroite pour laisser de la place au terrain */
+    height: 60%;
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* FORCE les 2 colonnes */
-    grid-template-rows: repeat(5, 1fr);    /* Prépare 5 rangées */
-    grid-gap: 15px 5px;     /* Espace : 15px vertical, 5px horizontal */
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 5px;          /* Espace très réduit entre les figurines */
     justify-items: center;
     align-items: center;
     z-index: 2;
 }
 
-.cote-gauche { left: 2%; }  /* Positionne les bleus à gauche */
-.cote-droite { right: 2%; } /* Positionne les rouges à droite */
-
+.cote-gauche { left: 1%; }  /* Collé au bord gauche */
+.cote-droite { right: 1%; } /* Collé au bord droit */
 
         .figurine-fixe { 
-    width: 100%;            /* S'adapte à la largeur de la colonne */
-    max-width: 55px;        /* Taille max pour garder la netteté */
-    height: auto;
-    max-height: 11vh;       /* Limite la hauteur pour éviter les chevauchements */
+    width: auto;
+    height: 8vh;            /* Taille plus compacte pour le mode 2 colonnes */
+    max-width: 45px;
     object-fit: contain;
-    filter: drop-shadow(2px 4px 5px rgba(0,0,0,0.8));
+    filter: drop-shadow(2px 3px 4px rgba(0,0,0,0.8));
     transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
