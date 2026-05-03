@@ -58,28 +58,28 @@
 
 .cote-gauche, .cote-droite {
     position: absolute;
-    top: 15%;               /* On remonte un peu pour laisser de la place verticalement */
-    width: 14%;             /* On passe de 11% à 14% pour l'aisance */
-    height: 70%;
+    top: 12%;
+    width: 130px;           /* Largeur fixe pour empêcher la 3ème colonne */
+    height: 65%;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 4px;          /* Un peu plus d'espace pour respirer */
-    justify-items: center;
-    align-items: center;
+    /* On force 2 colonnes de 60px chacune */
+    grid-template-columns: 60px 60px; 
+    grid-gap: 5px 10px;     /* 5px vertical, 10px horizontal */
+    justify-content: center;
+    align-content: center;
     z-index: 2;
 }
 
-.cote-gauche { left: 1%; }  /* Collé au bord gauche */
-.cote-droite { right: 1%; } /* Collé au bord droit */
+.cote-gauche { left: 1%; }
+.cote-droite { right: 1%; }
 
         .figurine-fixe { 
-    width: auto;
-    height: 11vh;           /* On augmente la hauteur pour agrandir la figurine */
-    max-width: 65px;        /* On augmente la largeur max autorisée */
+    width: 55px;            /* Un peu moins que la largeur de la colonne */
+    height: auto;
+    max-height: 11vh;       
     object-fit: contain;
-    filter: drop-shadow(3px 5px 6px rgba(0,0,0,0.8)); /* Ombre plus marquée pour le relief */
+    filter: drop-shadow(3px 4px 5px rgba(0,0,0,0.8));
     transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
 }
 
         #ballon {
