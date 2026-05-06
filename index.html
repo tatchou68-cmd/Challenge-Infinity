@@ -426,22 +426,6 @@
 
     let dernierTopVente = 0; 
 
-       
-    // On parcourt tous les badges créés
-    document.querySelectorAll('.badge-score').forEach(badge => {
-        // On récupère le nom du joueur via l'ID (ex: badge-anthony -> anthony)
-        const nomJoueur = badge.id.replace('badge-', '');
-        const score = stats[nomJoueur] || 0;
-
-        if (score > 0) {
-            badge.innerText = score;
-            badge.classList.add('active');
-        } else {
-            badge.classList.remove('active');
-        }
-    });
-});
-
     // 2. Écoute de la base de données
     db.ref('match').on('value', (snapshot) => {
         const data = snapshot.val();
