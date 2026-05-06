@@ -149,6 +149,7 @@
     display: block !important;
 }
 
+#recap-final h2 { color: #ffeb3b; font-size: 3vw; margin-top: 0; }
 .stats-finales {
     display: flex;
     justify-content: space-around;
@@ -173,15 +174,117 @@
     padding: 0 40px; /* C'est cet espace qui crée le décalage entre les deux blocs */
     font-style: italic;
 }
-}
 
 #recap-final.active {
     display: block !important; /* On force l'affichage */
 }
 #recap-final h2 { color: #ffeb3b; font-size: 3vw; margin-top: 0; }
-.stats-finales { font-size: 2vw; margin: 20px 0; display: flex; justify-content: space-around; }    
+.stats-finales { font-size: 2vw; margin: 20px 0; display: flex; justify-content: space-around; }  
+
+#leaderboard {
+    position: absolute;
+    bottom: 5px;             /* Presque tout en bas */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.5); /* Plus transparent */
+    padding: 3px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--bleu-infinity);
+    max-width: 98%;
+    z-index: 100;              /* Sous le footer si besoin, ou dessus */
+    justify-content: center;
+    pointer-events: none;    /* Évite de bloquer les clics */
+}
+
+.stat-joueur {
+    display: flex;
+    align-items: center;    /* Alignement horizontal pour gagner de la hauteur */
+    gap: 5px;
+    color: white;
+}
+
+.stat-joueur img {
+    width: 25px;            /* Plus petit pour ne pas manger l'écran */
+    height: 25px;
+    border-radius: 50%;
+    border: 1px solid gold;
+}
+
+.stat-joueur .count {
+    font-weight: bold;
+    font-size: 14px;
+    color: gold;
+}
+
+.stat-joueur .name {
+    font-size: 9px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.stat-joueur {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    min-width: 60px;
+}
+
+.stat-joueur img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid gold;
+}
+
+.stat-joueur .count {
+    font-weight: bold;
+    font-size: 18px;
+    color: gold;
+}
+
+.stat-joueur .name {
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+/* Conteneur pour superposer la figurine et son badge */
+.joueur-container {
+    position: relative;
+    width: 70px;
+    text-align: center;
+}
+
+.badge-score {
+    position: absolute;
+    top: -8px;               /* Un peu plus haut */
+    right: -8px;             /* Un peu plus à droite */
+    background: gold;
+    color: black;
+    border-radius: 50%;
+    width: 26px;             /* Un peu plus grand pour la visibilité TV */
+    height: 26px;
+    display: none;           /* Seul contrôle d'affichage */
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;         /* Plus lisible */
+    font-weight: bold;
+    border: 2px solid #000;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+    z-index: 99;             /* S'assure d'être au-dessus de la figurine */
+}
+
+.badge-score.active { 
+    display: flex !important; 
+}
+
+.badge-score.active { display: flex; }
+
     </style>
 </head>
+
 <body>
 
 <div id="tv-screen">
@@ -197,34 +300,86 @@
     <div id="overlay-but">BUUUUUUT !</div>
 
     <div class="cote-gauche">
-        <!-- Tes images joueurs ici... -->
-        <img src="anthony.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="bruno.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="lionel.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="mika.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="paolo.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="raph.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="renaud.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="stephane.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="nico.png" class="figurine-fixe" onerror="this.src='ballon.png'">
+        <div class="joueur-container">
+        <img src="anthony.png" class="figurine-fixe" data-name="anthony">
+        <div class="badge-score" id="badge-anthony">0</div>
     </div>
-
+    <div class="joueur-container">
+        <img src="bruno.png" class="figurine-fixe" data-name="bruno">
+        <div class="badge-score" id="badge-bruno">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="lionel.png" class="figurine-fixe" data-name="lionel">
+        <div class="badge-score" id="badge-lionel">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="mika.png" class="figurine-fixe" data-name="mika">
+        <div class="badge-score" id="badge-mika">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="paolo.png" class="figurine-fixe" data-name="paolo">
+        <div class="badge-score" id="badge-paolo">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="raph.png" class="figurine-fixe" data-name="raph">
+        <div class="badge-score" id="badge-raph">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="renaud.png" class="figurine-fixe" data-name="renaud">
+        <div class="badge-score" id="badge-renaud">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="stephane.png" class="figurine-fixe" data-name="stephane">
+        <div class="badge-score" id="badge-stephane">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="nico.png" class="figurine-fixe" data-name="nico">
+        <div class="badge-score" id="badge-nico">0</div>
+    </div>
+    </div>
+  
     <div id="stade">
         <div id="ballon"><img src="ballon.png"></div>
     </div>
 
     <div class="cote-droite">
-        <!-- Tes images joueurs ici... -->
-        <img src="christine.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="elias.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="julien.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="yassine.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="severine.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="fatima.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="emilia.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="olivier.png" class="figurine-fixe" onerror="this.src='ballon.png'">
-        <img src="hayet.png" class="figurine-fixe" onerror="this.src='ballon.png'">
+       <div class="joueur-container">
+        <img src="christine.png" class="figurine-fixe" data-name="christine">
+        <div class="badge-score" id="badge-christine">0</div>
     </div>
+       <div class="joueur-container">
+        <img src="elias.png" class="figurine-fixe" data-name="elias">
+        <div class="badge-score" id="badge-elias">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="julien.png" class="figurine-fixe" data-name="julien">
+        <div class="badge-score" id="badge-julien">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="yassine.png" class="figurine-fixe" data-name="yassine">
+        <div class="badge-score" id="badge-yassine">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="severine.png" class="figurine-fixe" data-name="severine">
+        <div class="badge-score" id="badge-severine">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="fatima.png" class="figurine-fixe" data-name="fatima">
+        <div class="badge-score" id="badge-fatima">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="emilia.png" class="figurine-fixe" data-name="emilia">
+        <div class="badge-score" id="badge-emilia">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="olivier.png" class="figurine-fixe" data-name="olivier">
+        <div class="badge-score" id="badge-olivier">0</div>
+    </div>
+    <div class="joueur-container">
+        <img src="hayet.png" class="figurine-fixe" data-name="hayet">
+        <div class="badge-score" id="badge-hayet">0</div>
+    </div>
+         </div>
 
     <div id="footer-scores">
         <div class="score-segment score-multi">Équipe Multimédia</div>
@@ -239,7 +394,7 @@
         <div class="score-segment score-confort">Équipe Confort</div>
     </div>
 
-    <div id="recap-final">
+       <div id="recap-final">
     <h2>FIN DU MATCH</h2>
     <div class="stats-finales">
         <div class="equipe-bilan">
@@ -273,6 +428,22 @@
     db.goOnline(); 
 
     let dernierTopVente = 0; 
+
+       
+    // On parcourt tous les badges créés
+    document.querySelectorAll('.badge-score').forEach(badge => {
+        // On récupère le nom du joueur via l'ID (ex: badge-anthony -> anthony)
+        const nomJoueur = badge.id.replace('badge-', '');
+        const score = stats[nomJoueur] || 0;
+
+        if (score > 0) {
+            badge.innerText = score;
+            badge.classList.add('active');
+        } else {
+            badge.classList.remove('active');
+        }
+    });
+});
 
     // 2. Écoute de la base de données
     db.ref('match').on('value', (snapshot) => {
@@ -351,6 +522,28 @@
             }
         }
     });
+
+    db.ref('statsJoueurs').on('value', snap => {
+    const stats = snap.val() || {};
+    console.log("Stats reçues de Firebase :", stats);
+
+    document.querySelectorAll('.badge-score').forEach(badge => {
+        // On récupère le nom (anthony, bruno, etc.)
+        const nom = badge.id.replace('badge-', '');
+        
+        // On cherche le score en testant plusieurs écritures (anthony, Anthony)
+        const nomPropre = nom.charAt(0).toUpperCase() + nom.slice(1);
+        const score = stats[nom] || stats[nomPropre] || 0;
+
+        if (parseInt(score) > 0) {
+            badge.textContent = score;
+            badge.classList.add('active');
+        } else {
+            badge.classList.remove('active');
+        }
+    });
+});
+
 </script>
 </body>
 </html>
