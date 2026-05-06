@@ -258,29 +258,27 @@
 }
 
 .badge-score {
-    position: absolute;
-    top: -8px;               /* Un peu plus haut */
-    right: -8px;             /* Un peu plus à droite */
-    background: gold;
-    color: black;
-    border-radius: 50%;
-    width: 26px;             /* Un peu plus grand pour la visibilité TV */
-    height: 26px;
-    display: none;           /* Seul contrôle d'affichage */
-    justify-content: center;
-    align-items: center;
-    font-size: 16px;         /* Plus lisible */
-    font-weight: bold;
-    border: 2px solid #000;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
-    z-index: 99;             /* S'assure d'être au-dessus de la figurine */
+    position: absolute !important;
+    top: -10px !important;
+    right: -10px !important;
+    background-color: #ffeb3b !important; /* Jaune vif */
+    color: #000 !important;
+    border-radius: 50% !important;
+    width: 28px !important;
+    height: 28px !important;
+    display: none; /* Reste caché si score = 0 */
+    justify-content: center !important;
+    align-items: center !important;
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    border: 3px solid black !important;
+    box-shadow: 0 0 15px rgba(255, 235, 59, 0.8) !important;
+    z-index: 9999 !important; /* Passe devant TOUT */
 }
 
-.badge-score.active { 
-    display: flex !important; 
+.badge-score.active {
+    display: flex !important;
 }
-
-.badge-score.active { display: flex; }
 
     </style>
 </head>
@@ -523,27 +521,31 @@
         }
     });
 
-    db.ref('statsJoueurs').on('value', snap => {
+   db.ref('statsJoueurs').on('value', snap => {
     const stats = snap.val() || {};
-    console.log("Stats reçues de Firebase :", stats);
+    console.log("DEBUG - Données reçues :", stats);
 
-    document.querySelectorAll('.badge-score').forEach(badge => {
-        // On récupère le nom (anthony, bruno, etc.)
+    // On cible tous les badges de la page
+    const tousLesBadges = document.querySelectorAll('.badge-score');
+    
+    tousLesBadges.forEach(badge => {
+        // On récupère le nom (ex: anthony)
         const nom = badge.id.replace('badge-', '');
         
-        // On cherche le score en testant plusieurs écritures (anthony, Anthony)
-        const nomPropre = nom.charAt(0).toUpperCase() + nom.slice(1);
-        const score = stats[nom] || stats[nomPropre] || 0;
+        // On cherche la valeur dans Firebase en testant minuscule et Majuscule
+        const score = stats[nom] || stats[nom.charAt(0).toUpperCase() + nom.slice(1)] || 0;
 
         if (parseInt(score) > 0) {
-            badge.textContent = score;
+            badge.innerHTML = score; // On force le texte
             badge.classList.add('active');
+            console.log("Bulle activée pour :", nom, "avec score :", score);
         } else {
             badge.classList.remove('active');
         }
     });
+}, error => {
+    console.log("Erreur Firebase :", error);
 });
-
 </script>
 </body>
 </html>
