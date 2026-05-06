@@ -259,25 +259,24 @@
 
 .badge-score {
     position: absolute !important;
-    top: -10px !important;
-    right: -10px !important;
-    background-color: #ffeb3b !important; /* Jaune vif */
-    color: #000 !important;
-    border-radius: 50% !important;
-    width: 28px !important;
-    height: 28px !important;
-    display: none; /* Reste caché si score = 0 */
-    justify-content: center !important;
-    align-items: center !important;
-    font-size: 16px !important;
-    font-weight: 900 !important;
-    border: 3px solid black !important;
-    box-shadow: 0 0 15px rgba(255, 235, 59, 0.8) !important;
-    z-index: 9999 !important; /* Passe devant TOUT */
+    top: -10px;
+    right: -10px;
+    background: gold !important;
+    color: black !important;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: none; /* On utilise uniquement display pour cacher/montrer */
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    border: 2px solid black;
+    z-index: 9999; /* Pour passer devant l'image du joueur */
 }
 
-.badge-score.active {
-    display: flex !important;
+.badge-score.active { 
+    display: flex !important; 
 }
 
     </style>
